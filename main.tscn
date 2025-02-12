@@ -1,0 +1,144 @@
+[gd_scene load_steps=10 format=4 uid="uid://bl45kf2dtoue6"]
+
+[ext_resource type="Script" path="res://scripts/network.gd" id="1_7wias"]
+[ext_resource type="FontFile" uid="uid://d0hy3ruk5j7vv" path="res://fonts/monogram.ttf" id="2_io851"]
+[ext_resource type="Texture2D" uid="uid://tags1bppqxq5" path="res://sprites/background.png" id="2_lohrn"]
+[ext_resource type="Texture2D" uid="uid://b5v4j433ju4gq" path="res://sprites/ground.png" id="3_s5yw8"]
+[ext_resource type="Script" path="res://scripts/chat.gd" id="5_i3d6k"]
+[ext_resource type="Script" path="res://scripts/teleporter.gd" id="6_5br7p"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g1y17"]
+texture = ExtResource("3_s5yw8")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -16, 16, -16, 16, -8, -8, -8)
+1:0/next_alternative_id = 2
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, -8, -16, -8)
+2:0/next_alternative_id = 2
+2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, -8, -16, -8)
+3:0/next_alternative_id = 2
+3:0/0 = 0
+3:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, -8, -16, -8)
+4:0/0 = 0
+4:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 8, -16, 8, -8, -16, -8)
+0:1/next_alternative_id = 3
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/next_alternative_id = 3
+4:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_57ht2"]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 3
+physics_layer_0/collision_mask = 3
+sources/1 = SubResource("TileSetAtlasSource_g1y17")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pgim4"]
+size = Vector2(11168, 558)
+
+[node name="Node2D" type="Node"]
+script = ExtResource("1_7wias")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+texture_filter = 1
+motion_scale = Vector2(0.5, 0.5)
+motion_mirroring = Vector2(410, 576)
+
+[node name="Node2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+scale = Vector2(2, 2)
+texture = ExtResource("2_lohrn")
+centered = false
+
+[node name="Node2D2" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2(0, 288)
+scale = Vector2(2, 2)
+texture = ExtResource("2_lohrn")
+centered = false
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+texture_filter = 1
+position = Vector2(0, 1)
+scale = Vector2(2, 2)
+tile_map_data = PackedByteArray("AAABAAMAAQABAAAAAAACAAMAAQACAAAAAAADAAMAAQADAAAAAAAEAAMAAQACAAAAAAAFAAMAAQADAAAAAAAGAAMAAQABAAAAAAAHAAMAAQADAAAAAAAIAAMAAQACAAAAAAAJAAMAAQABAAAAAAAKAAMAAQADAAAAAAALAAMAAQACAAAAAAAAAAMAAQAAAAAAAAAMAAMAAQAEAAAAAAAMAAQAAQAEAAIAAAALAAQAAQACAAIAAAAKAAQAAQACAAIAAAAJAAQAAQACAAIAAAAIAAQAAQACAAIAAAAHAAQAAQACAAIAAAAGAAQAAQADAAIAAAACAAIAAQAAAAEAAAADAAIAAQAEAAEAAAACAAEAAQAAAAAAAAADAAEAAQAEAAAAAAD+/wUAAQABAAAAAAD//wUAAQABAAAAAAAAAAUAAQACAAAAAAABAAUAAQACAAAAAAACAAUAAQABAAAAAAADAAUAAQACAAAAAAAEAAUAAQABAAAAAAAFAAUAAQABAAAAAAAGAAUAAQADAAAAAAAHAAUAAQADAAAAAAABAAQAAQABAAEAAAACAAQAAQACAAEAAAADAAQAAQACAAEAAAAEAAQAAQACAAEAAAAFAAQAAQACAAEAAAAAAAQAAQAAAAEAAAAHAAYAAQACAAIAAAD+/wYAAQACAAIAAAD//wYAAQABAAIAAAAGAAYAAQACAAIAAAAFAAcAAQAEAAIAAAAAAAcAAQACAAIAAAABAAcAAQACAAIAAAACAAcAAQACAAIAAAADAAcAAQACAAIAAAAEAAcAAQACAAIAAAD//wcAAQAAAAIAAAAAAAYAAQACAAEAAAABAAYAAQACAAEAAAACAAYAAQACAAEAAAADAAYAAQACAAEAAAAEAAYAAQACAAEAAAAFAAYAAQADAAIAAAAIAAYAAQAEAAIAAAAIAAUAAQAEAAAAAAD9/wUAAQAAAAAAAAD9/wYAAQAAAAIAAADk/wYAAQAAAAEAAADk/wcAAQAAAAIAAADl/wYAAQACAAEAAADl/wcAAQACAAIAAADm/wYAAQACAAEAAADm/wcAAQACAAIAAADn/wYAAQACAAEAAADn/wcAAQACAAIAAADo/wYAAQAEAAEAAADo/wcAAQAEAAIAAADp/wcAAQAAAAEAAADp/wgAAQAAAAIAAADq/wcAAQACAAEAAADq/wgAAQACAAIAAADr/wcAAQACAAEAAADr/wgAAQACAAIAAADs/wcAAQACAAEAAADs/wgAAQACAAIAAADt/wcAAQACAAEAAADt/wgAAQACAAIAAADu/wcAAQACAAEAAADu/wgAAQACAAIAAADv/wcAAQACAAEAAADv/wgAAQACAAIAAADw/wcAAQAEAAEAAADw/wgAAQAEAAIAAADx/wcAAQAAAAEAAADx/wgAAQAAAAIAAADy/wcAAQACAAEAAADy/wgAAQACAAIAAADz/wcAAQACAAEAAADz/wgAAQACAAIAAAD0/wcAAQACAAEAAAD0/wgAAQACAAIAAAD1/wcAAQAEAAEAAAD1/wgAAQAEAAIAAAD2/wcAAQAAAAEAAAD2/wgAAQAAAAIAAAD3/wcAAQACAAEAAAD3/wgAAQACAAIAAAD4/wcAAQACAAEAAAD4/wgAAQACAAIAAAD5/wcAAQABAAEAAAD5/wgAAQACAAIAAAD6/wcAAQABAAEAAAD6/wgAAQACAAIAAAD7/wcAAQACAAEAAAD7/wgAAQACAAIAAAD8/wcAAQAEAAEAAAD8/wgAAQAEAAIAAADk/wUAAQAAAAAAAADl/wUAAQABAAAAAADm/wUAAQACAAAAAADn/wUAAQADAAAAAADo/wUAAQAEAAAAAADp/wYAAQAAAAAAAADq/wYAAQABAAAAAADr/wYAAQACAAAAAADs/wYAAQADAAAAAADt/wYAAQACAAAAAADu/wYAAQACAAAAAADv/wYAAQACAAAAAADw/wYAAQAEAAAAAADx/wYAAQAAAAAAAADy/wYAAQABAAAAAADz/wYAAQACAAAAAAD0/wYAAQADAAAAAAD1/wYAAQAEAAAAAAD2/wYAAQAAAAAAAAD3/wYAAQABAAAAAAD4/wYAAQACAAAAAAD5/wYAAQACAAAAAAD6/wYAAQACAAAAAAD7/wYAAQADAAAAAAD8/wYAAQAEAAAAAAA=")
+tile_set = SubResource("TileSet_57ht2")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://scenes/shpoobo.tscn")
+spawn_path = NodePath("../Players")
+
+[node name="Players" type="Node2D" parent="."]
+texture_filter = 1
+position = Vector2(70, 73)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(200, 115)
+drag_vertical_offset = -0.3
+editor_draw_drag_margin = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 3
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TextEdit" type="LineEdit" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -21.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("2_io851")
+theme_override_font_sizes/font_size = 16
+placeholder_text = "type your message"
+script = ExtResource("5_i3d6k")
+
+[node name="DebugInfo" type="RichTextLabel" parent="CanvasLayer/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/normal_font = ExtResource("2_io851")
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+text = "{ }
+"
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("6_5br7p")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-65, 833)
+shape = SubResource("RectangleShape2D_pgim4")
+
+[connection signal="body_shape_entered" from="Area2D" to="Area2D" method="_on_body_shape_entered"]

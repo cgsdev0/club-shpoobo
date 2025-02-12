@@ -1,0 +1,153 @@
+[gd_scene load_steps=18 format=3 uid="uid://bqlq5n0hsh05i"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_qlk8t"]
+[ext_resource type="Script" path="res://scripts/input_sync.gd" id="2_a5vi4"]
+[ext_resource type="Texture2D" uid="uid://bo5i57j2xjtjr" path="res://sprites/walk.png" id="2_dndv6"]
+[ext_resource type="FontFile" uid="uid://d0hy3ruk5j7vv" path="res://fonts/monogram.ttf" id="4_d2gih"]
+[ext_resource type="Script" path="res://scripts/grid_snap.gd" id="5_ojvgr"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rkm84"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("Sprite2D:flip_h")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:on_ground")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_br2vs"]
+properties/0/path = NodePath("InputSync:move_input")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wuudo"]
+atlas = ExtResource("2_dndv6")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v5sy3"]
+atlas = ExtResource("2_dndv6")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_81g7l"]
+atlas = ExtResource("2_dndv6")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s1bwr"]
+atlas = ExtResource("2_dndv6")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_en0ge"]
+atlas = ExtResource("2_dndv6")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bb21c"]
+atlas = ExtResource("2_dndv6")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_drgl5"]
+atlas = ExtResource("2_dndv6")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2h8n4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wuudo")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v5sy3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_81g7l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s1bwr")
+}],
+"loop": false,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_en0ge")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bb21c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_drgl5")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 9.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_voar6"]
+radius = 11.0
+height = 40.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ph828"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.211765, 0.317647, 0.227451, 1)
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+texture_filter = 1
+script = ExtResource("1_qlk8t")
+
+[node name="CharacterSync" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_rkm84")
+
+[node name="InputSync" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_br2vs")
+script = ExtResource("2_a5vi4")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_2h8n4")
+animation = &"jump"
+offset = Vector2(0, -3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_voar6")
+
+[node name="Label" type="Label" parent="."]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -66.0
+offset_top = -64.0
+offset_right = 66.0
+offset_bottom = -22.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = -1
+theme_override_fonts/font = ExtResource("4_d2gih")
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_ph828")
+text = "a
+b
+c"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+
+[node name="ChatTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[node name="CameraTarget" type="Node2D" parent="."]
+script = ExtResource("5_ojvgr")
