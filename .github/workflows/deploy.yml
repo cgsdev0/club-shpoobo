@@ -62,3 +62,20 @@ jobs:
         with:
           name: web build
           path: ./builds/html/html.zip
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: gamer
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          source: "builds/server/server.zip"
+          target: .
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: gamer
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: whoami
