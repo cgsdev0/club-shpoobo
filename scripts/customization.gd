@@ -7,7 +7,7 @@ func _ready():
 
 
 func _input(event):
-	if event.is_action_pressed("customize"):
+	if event.is_action_pressed("customize") && !Global.chat_active:
 		visible = !visible
 
 
