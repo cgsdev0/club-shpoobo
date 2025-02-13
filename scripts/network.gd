@@ -100,7 +100,10 @@ func start_client():
 		# await get_tree().create_timer([1.0, 10.0].pick_random()).timeout
 		# Create client.
 		var peer = WebSocketMultiplayerPeer.new()
-		var error = peer.create_client("ws://127.0.0.1:5451")
+		var where = "ws://127.0.0.1:5451"
+		if !OS.is_debug_build():
+			where = "wss://shpoobo.badcop.games"
+		var error = peer.create_client(where)
 		if error:
 			return error
 		print("connecting as client...")
