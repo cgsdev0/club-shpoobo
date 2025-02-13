@@ -33,7 +33,6 @@
         window.twitch_player = player;
 
         player.addEventListener(Twitch.Embed.VIDEO_READY, function () {
-            log('Attempt volumne and unmute');
             player.setVolume(0.5);
             player.setMuted(false);
         });

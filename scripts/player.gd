@@ -20,7 +20,7 @@ extends CharacterBody2D
 
 var owned = false
 func _enter_tree():
-	$InputSync.set_multiplayer_authority(name.to_int())
+	set_multiplayer_authority(name.to_int())
 	if name.to_int() != multiplayer.get_unique_id():
 		collision_layer = 2
 		z_index = 4
@@ -122,7 +122,7 @@ func _physics_process(delta):
 	var acc = accessories[head_accessory]
 	update_texture($HeadFront, acc)
 	update_texture($HeadBack, acc, 32)
-	if multiplayer.is_server():
+	if get_multiplayer_authority() == multiplayer.get_unique_id():
 		_move(delta)
 
 var was_on_ground = true
