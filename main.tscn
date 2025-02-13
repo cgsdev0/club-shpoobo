@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=4 uid="uid://bl45kf2dtoue6"]
+[gd_scene load_steps=44 format=4 uid="uid://bl45kf2dtoue6"]
 
 [ext_resource type="Script" path="res://scripts/network.gd" id="1_7wias"]
 [ext_resource type="FontFile" uid="uid://d0hy3ruk5j7vv" path="res://fonts/monogram.ttf" id="2_io851"]
@@ -90,6 +90,12 @@ default_font_size = 16
 content_margin_left = 5.0
 content_margin_bottom = 1.0
 bg_color = Color(0, 0, 0, 0.623529)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3syn7"]
+size = Vector2(5419, 558)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jw887"]
+size = Vector2(5676, 558)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pgim4"]
 size = Vector2(11168, 558)
@@ -374,13 +380,22 @@ collision_mask = 3
 script = ExtResource("6_5br7p")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(-65, 833)
-shape = SubResource("RectangleShape2D_pgim4")
+position = Vector2(-2939.5, 833)
+shape = SubResource("RectangleShape2D_3syn7")
+
+[node name="Area2D3" type="Area2D" parent="."]
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("6_5br7p")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D3"]
+position = Vector2(2681, 833)
+shape = SubResource("RectangleShape2D_jw887")
 
 [node name="Area2D2" type="Area2D" parent="."]
 position = Vector2(-28, 1850)
-collision_layer = 2
-collision_mask = 2
+collision_layer = 3
+collision_mask = 3
 script = ExtResource("6_5br7p")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2"]
@@ -581,6 +596,14 @@ collision_mask = 3
 position = Vector2(0, -11)
 shape = SubResource("RectangleShape2D_282ck")
 
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(2152, 184)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_u4s4x")
+frame_progress = 0.132363
+script = ExtResource("16_7ku6r")
+
 [node name="Tv" type="Sprite2D" parent="."]
 texture_filter = 1
 position = Vector2(-109, 2169)
@@ -602,4 +625,5 @@ shape = SubResource("RectangleShape2D_8k0oc")
 [connection signal="pressed" from="CanvasLayer/Control/Customization/VBoxContainer/HBoxContainer2/PrevBody" to="CanvasLayer/Control/Customization" method="_on_prev_body_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/Customization/VBoxContainer/HBoxContainer2/NextBody" to="CanvasLayer/Control/Customization" method="_on_next_body_pressed"]
 [connection signal="body_shape_entered" from="Area2D" to="Area2D" method="_on_body_shape_entered"]
+[connection signal="body_shape_entered" from="Area2D3" to="Area2D3" method="_on_body_shape_entered"]
 [connection signal="body_shape_entered" from="Area2D2" to="Area2D2" method="_on_body_shape_entered"]

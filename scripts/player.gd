@@ -158,15 +158,15 @@ func _process(delta):
 			play_animation("idle")
 	was_on_ground = on_ground
 
-@rpc("authority")
 func respawn():
 	position = start_position
 	last_y = global_position.y
 	
-@rpc("authority")
+@rpc("any_peer")
 func teleport(pos):
-	last_y = pos.y
-	global_position = pos
+	if multiplayer.get_remote_sender_id() == 1:
+		last_y = pos.y
+		global_position = pos
 		
 func _move(delta):
 	velocity.y += gravity * delta

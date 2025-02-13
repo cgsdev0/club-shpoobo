@@ -9,8 +9,8 @@ func _ready():
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
 		set_physics_process(false)
 	else:
-		Global.change_color.connect(change_color.rpc_id)
-		Global.change_item.connect(change_item.rpc_id)
+		Global.change_color.connect(change_color)
+		Global.change_item.connect(change_item)
 	Global.enable_controls.connect(on_enable)
 	Global.chat.connect(on_chat)
 	
@@ -42,7 +42,6 @@ func chat(msg: String):
 func secret(up):
 	Global.interact.emit(up, multiplayer.get_remote_sender_id())
 
-@rpc("authority")
 func change_color(item, hue):
 	match item:
 		"hat":
@@ -50,7 +49,6 @@ func change_color(item, hue):
 		"body":
 			get_parent().player_hue = hue
 	
-@rpc("authority")
 func change_item(item, incr):
 	match item:
 		"hat":

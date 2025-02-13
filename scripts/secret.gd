@@ -16,7 +16,7 @@ func interact(up, interactee):
 	if !up && !open:
 		open = true
 	elif up && open && !is_instance_valid(tween):
-		interactee.teleport($Marker2D.global_position)
+		interactee.teleport.rpc_id(interactee.name.to_int(), $Marker2D.global_position)
 	
 var tween
 func on_open():
