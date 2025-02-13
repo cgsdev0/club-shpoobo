@@ -78,4 +78,4 @@ jobs:
           username: gamer
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
-          script: whoami
+          script: ./update
