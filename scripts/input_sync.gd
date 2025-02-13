@@ -19,23 +19,23 @@ func on_enable():
 	
 func on_chat(msg):
 	if is_physics_processing():
+		var split = msg.split(" ")
+		for i in split.size():
+			var w = split[i]
+			if w.length() < 2:
+				continue
+			var a = w[0]
+			var b = w[1]
+			# shoobify
+			if b.to_lower() in vowels && a.to_lower() not in vowels && randi_range(1, 5) == 1:
+				split[i] = "shp" + w.substr(1)
+		msg = " ".join(split)
 		chat.rpc(msg)
 
 static var vowels = ["a", "e", "i", "o", "u"]
 
 @rpc("authority", "call_local")
 func chat(msg: String):
-	var split = msg.split(" ")
-	for i in split.size():
-		var w = split[i]
-		if w.length() < 2:
-			return
-		var a = w[0]
-		var b = w[1]
-		# shoobify
-		if b.to_lower() in vowels && a.to_lower() not in vowels && randi_range(1, 5) == 1:
-			split[i] = "shp" + w.substr(1)
-	msg = " ".join(split)
 	get_parent().set_label(msg)
 
 @rpc("authority")
