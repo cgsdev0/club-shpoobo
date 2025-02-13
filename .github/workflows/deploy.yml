@@ -1,0 +1,64 @@
+name: Build Godot Project
+
+on:
+  workflow_dispatch: {}
+  
+jobs:
+  export_web:
+    name: Export
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Export Game
+        id: export
+        # Use latest version (see releases for all versions)
+        uses: firebelley/godot-export@v6.0.0
+        with:
+          # Defining all the required inputs
+          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
+          relative_project_path: ./
+          archive_output: true
+          use_preset_export_path: true
+          export_debug: false
+          
+#      - name: Deploy Server
+#        uses: easingthemes/ssh-deploy@main
+#        env:
+#            SSH_PRIVATE_KEY: ${{ secrets.SERVER_PRIVATE_KEY }}
+#            ARGS: "-rlgoDzvc -i --delete"
+#            SOURCE: "builds/linux"
+#            REMOTE_HOST: ${{ secrets.SERVER_IP }}
+#            REMOTE_USER: godot
+#            SCRIPT_BEFORE: |
+#              systemctl --user stop ldgjam2023
+#            SCRIPT_AFTER: |
+#              cd linux
+#              unzip linux.zip
+#              systemctl --user start ldgjam2023
+#      - uses: KikimoraGames/itch-publish@v0.0.3
+#        with:
+#          butlerApiKey: ${{secrets.BUTLER_API_KEY}}
+#          gameData: ./builds/windows/windows.zip
+#          itchUsername: badcop
+#          itchGameId: bucc-beak
+#          buildChannel: windows
+#      - uses: KikimoraGames/itch-publish@v0.0.3
+#        with:
+#          butlerApiKey: ${{secrets.BUTLER_API_KEY}}
+#          gameData: ./builds/linux/linux.zip
+#          itchUsername: badcop
+#          itchGameId: bucc-beak
+#          buildChannel: linux
+      - name: Archive the build
+        uses: actions/upload-artifact@v3
+        with:
+          name: server build
+          path: ./builds/server/server.zip
+      - name: Archive the html build
+        uses: actions/upload-artifact@v3
+        with:
+          name: web build
+          path: ./builds/html/index.zip
