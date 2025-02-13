@@ -26,6 +26,10 @@ window/size/viewport_height=288
 window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
 
+[editor]
+
+export/convert_text_resources_to_binary=false
+
 [input]
 
 move_left={
