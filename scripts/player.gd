@@ -23,11 +23,12 @@ func _enter_tree():
 	$InputSync.set_multiplayer_authority(name.to_int())
 	if name.to_int() != multiplayer.get_unique_id():
 		collision_layer = 2
+		z_index = 4
 		$CameraTarget.queue_free()
 	else:
 		$AudioListener2D.current = true
 		owned = true
-		z_index = 2
+		z_index = 5
 		var cam = get_viewport().get_camera_2d()
 		cam.reparent($CameraTarget)
 		cam.position = Vector2.ZERO

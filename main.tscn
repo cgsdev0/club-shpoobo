@@ -460,7 +460,7 @@ text = "press slash to customize"
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="HouseInterior"]
 position = Vector2(-58, 26)
 sprite_frames = SubResource("SpriteFrames_u4s4x")
-frame_progress = 0.733378
+frame_progress = 0.132363
 script = ExtResource("16_7ku6r")
 
 [node name="SecretInterior" type="Sprite2D" parent="."]
