@@ -26,7 +26,8 @@ func _register_player(new_player_info):
 	var new_player_id = multiplayer.get_remote_sender_id()
 	if new_player_id == 1:
 		return
-	players[new_player_id] = new_player_info
+	if !multiplayer.is_server():
+		players[new_player_id] = new_player_info
 	player_connected.emit(new_player_id, new_player_info)
 	
 # When a peer connects, send them my player info.
@@ -37,7 +38,8 @@ func _on_player_connected(id):
 		var pc = player_scene.instantiate()
 		pc.name = str(id)
 		$Players.add_child(pc, true)
-
+		players[id] = pc
+		
 func _on_player_disconnected(id):
 	players.erase(id)
 	player_disconnected.emit(id)
@@ -59,12 +61,26 @@ func _on_server_disconnected():
 	players.clear()
 	server_disconnected.emit()
 
+func on_interact(up, who):
+	var space_state = get_viewport().get_world_2d().direct_space_state
+	var query = PhysicsPointQueryParameters2D.new()
+	var interactee = players[who]
+	if !is_instance_valid(interactee):
+		return
+	query.position = interactee.global_position
+	query.collision_mask = 4 # layer 3
+	query.collide_with_areas = true  # Ensure we're checking against areas, not just physics bodies
+	var result = space_state.intersect_point(query)
+	if result.size() > 0:
+		result[0].collider.get_parent().interact(up, interactee)
+	
 func _ready():
 	multiplayer.peer_connected.connect(_on_player_connected)
 	multiplayer.peer_disconnected.connect(_on_player_disconnected)
 	multiplayer.connected_to_server.connect(_on_connected_ok)
 	multiplayer.connection_failed.connect(_on_connected_fail)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	Global.interact.connect(on_interact)
 	if OS.has_feature("dedicated_server"):
 		start_server()
 	else:
@@ -81,6 +97,7 @@ func start_server():
 		print("booting as server")
 
 func start_client():
+		# await get_tree().create_timer([1.0, 10.0].pick_random()).timeout
 		# Create client.
 		var peer = WebSocketMultiplayerPeer.new()
 		var error = peer.create_client("ws://127.0.0.1:5451")
@@ -91,3 +108,4 @@ func start_client():
 		
 func _process(delta):
 	%DebugInfo.text = str(players).replace(", ", ",\n  ")
+	%OnlineCount.text = "[right]" + str(players.size()) + " player(s) online  "

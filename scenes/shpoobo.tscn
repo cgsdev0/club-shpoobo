@@ -1,26 +1,48 @@
-[gd_scene load_steps=18 format=3 uid="uid://bqlq5n0hsh05i"]
+[gd_scene load_steps=22 format=3 uid="uid://bqlq5n0hsh05i"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_qlk8t"]
 [ext_resource type="Script" path="res://scripts/input_sync.gd" id="2_a5vi4"]
 [ext_resource type="Texture2D" uid="uid://bo5i57j2xjtjr" path="res://sprites/walk.png" id="2_dndv6"]
+[ext_resource type="Shader" path="res://shaders/hue.gdshader" id="3_hxi8o"]
 [ext_resource type="FontFile" uid="uid://d0hy3ruk5j7vv" path="res://fonts/monogram.ttf" id="4_d2gih"]
 [ext_resource type="Script" path="res://scripts/grid_snap.gd" id="5_ojvgr"]
+[ext_resource type="AudioStream" uid="uid://c8jyxn4dafbqj" path="res://music/ShpooboSound.wav" id="7_01ckq"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rkm84"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("Sprite2D:flip_h")
+properties/1/path = NodePath(".:on_ground")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath(".:on_ground")
+properties/2/path = NodePath(".:player_hue")
 properties/2/spawn = true
-properties/2/replication_mode = 1
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:head_hue")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:head_accessory")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath(".:player_skin")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+properties/6/path = NodePath(".:last_y")
+properties/6/spawn = true
+properties/6/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_br2vs"]
 properties/0/path = NodePath("InputSync:move_input")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath("InputSync:jump_input")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dbp2a"]
+resource_local_to_scene = true
+shader = ExtResource("3_hxi8o")
+shader_parameter/hue = 0.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wuudo"]
 atlas = ExtResource("2_dndv6")
@@ -72,7 +94,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"jump",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -88,6 +110,11 @@ animations = [{
 "name": &"walk",
 "speed": 9.0
 }]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_45odd"]
+resource_local_to_scene = true
+shader = ExtResource("3_hxi8o")
+shader_parameter/hue = 0.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_voar6"]
 radius = 11.0
@@ -112,7 +139,22 @@ replication_config = SubResource("SceneReplicationConfig_rkm84")
 replication_config = SubResource("SceneReplicationConfig_br2vs")
 script = ExtResource("2_a5vi4")
 
+[node name="HeadBack" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_dbp2a")
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_2h8n4")
+animation = &"jump"
+offset = Vector2(0, -3)
+
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_45odd")
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_2h8n4")
+animation = &"jump"
+offset = Vector2(0, -3)
+
+[node name="HeadFront" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_dbp2a")
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_2h8n4")
 animation = &"jump"
@@ -151,3 +193,9 @@ one_shot = true
 
 [node name="CameraTarget" type="Node2D" parent="."]
 script = ExtResource("5_ojvgr")
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_01ckq")
+max_distance = 200.0
+
+[node name="AudioListener2D" type="AudioListener2D" parent="."]

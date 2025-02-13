@@ -1,44 +1,24 @@
 extends Node2D
 
-var grid_position = Vector2.ZERO
-var grid_size = Vector2.ZERO
-
 @onready var parent = get_parent()
 @onready var camera = get_viewport().get_camera_2d()
 
+var target_position = Vector2(0.0, 200.0)
 func _ready():
-	# If you drag the camera from the OffsetPivot node,
-	# its position will not be (0, 0)
-	grid_size = Vector2(400, 32)
 	set_as_top_level(true)
-	update_grid_position()
 
-var inertia = -1.0
 
+var was_locked = false
 func _process(delta):
-	update_grid_position()
-	var ab = abs(position.y - target_position.y)
-	if ab < 10.0 || !parent.on_ground:
-		inertia -= delta * 10.0
-	else:
-		inertia += delta * 16.0
-	inertia = clampf(inertia, -1.0, 1.0)
-	var diff = max(40, ab)
-	position.y = move_toward(position.y, target_position.y, delta * diff * 5.0 * clampf(inertia, 0.0, 1.0))
+	if get_parent().locked:
+		was_locked = true
+		return
 
-
-func update_grid_position():
-	var new_grid_position = calculate_grid_position()
-	grid_position = new_grid_position
-	jump_to_grid_position()
-
-
-func calculate_grid_position():
-	var x = round((parent.position.x - camera.offset.x / 2.0) / grid_size.x)
-	var y = round((parent.position.y - 5 * camera.offset.y / 8.0) / grid_size.y)
-	return Vector2(x, y)
-
-var target_position = Vector2.ZERO
-func jump_to_grid_position():
-	target_position = Vector2(grid_position * grid_size)
-	position.x = parent.position.x - camera.offset.x / 2.0
+	var ty = get_parent().last_y - 128
+	if was_locked:
+		was_locked = false
+		position.y = get_parent().global_position.y
+	var ab = abs(position.y - ty)
+	var diff = max(20, ab)
+	position.y = move_toward(position.y, ty, delta * diff * 5.0)
+	position.x = get_parent().global_position.x - camera.offset.x
