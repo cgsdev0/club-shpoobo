@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=4 uid="uid://bl45kf2dtoue6"]
+[gd_scene load_steps=41 format=4 uid="uid://bl45kf2dtoue6"]
 
 [ext_resource type="Script" path="res://scripts/network.gd" id="1_7wias"]
 [ext_resource type="FontFile" uid="uid://d0hy3ruk5j7vv" path="res://fonts/monogram.ttf" id="2_io851"]
@@ -19,6 +19,8 @@
 [ext_resource type="AudioStream" uid="uid://bb6qwr655cvwd" path="res://music/Stage1Shpoobo.mp3" id="16_4jfcs"]
 [ext_resource type="Script" path="res://scripts/pet.gd" id="16_7ku6r"]
 [ext_resource type="Texture2D" uid="uid://bqf6tnlurmv4q" path="res://sprites/platform.png" id="19_a3kg3"]
+[ext_resource type="Texture2D" uid="uid://dx5w5xs3n72gc" path="res://sprites/tv.png" id="20_a0spd"]
+[ext_resource type="Script" path="res://scripts/tv.gd" id="21_06hqc"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_7yp6y"]
 properties/0/path = NodePath(".:open")
@@ -561,6 +563,12 @@ collision_mask = 3
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4/StaticBody2D"]
 position = Vector2(0, -11)
 shape = SubResource("RectangleShape2D_282ck")
+
+[node name="Tv" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-139, 209)
+texture = ExtResource("20_a0spd")
+script = ExtResource("21_06hqc")
 
 [connection signal="value_changed" from="CanvasLayer/Control/Customization/VBoxContainer/HatColor" to="CanvasLayer/Control/Customization" method="_on_hat_color_value_changed"]
 [connection signal="value_changed" from="CanvasLayer/Control/Customization/VBoxContainer/BodyColor" to="CanvasLayer/Control/Customization" method="_on_body_color_value_changed"]
