@@ -45,13 +45,13 @@ jobs:
 #          itchUsername: badcop
 #          itchGameId: bucc-beak
 #          buildChannel: windows
-#      - uses: KikimoraGames/itch-publish@v0.0.3
-#        with:
-#          butlerApiKey: ${{secrets.BUTLER_API_KEY}}
-#          gameData: ./builds/linux/linux.zip
-#          itchUsername: badcop
-#          itchGameId: bucc-beak
-#          buildChannel: linux
+      - uses: KikimoraGames/itch-publish@v0.0.3
+        with:
+          butlerApiKey: ${{secrets.BUTLER_API_KEY}}
+          gameData: ./builds/html/html.zip
+          itchUsername: badcop
+          itchGameId: club-shpoobo
+          buildChannel: linux
       - name: Archive the build
         uses: actions/upload-artifact@v4
         with:
@@ -61,4 +61,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: web build
-          path: ./builds/html/index.zip
+          path: ./builds/html/html.zip
