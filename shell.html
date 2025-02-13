@@ -22,9 +22,10 @@
         var engine = new Engine($GODOT_CONFIG);
         engine.startGame();
         var options = {
-            width: 160,
-            height: 90,
+            width: "100%",
+            height: "100%",
             channel: "kuviboy",
+            layout: "video",
             allowfullscreen: false,
             parent: ["badcop.itch.io", "html-classic.itch.zone"]
         };
@@ -58,7 +59,9 @@
             position_iframe(zx, zy);
             if (zx + fw > 0 && zy + fh > 0 && zx < w && zy < h) {
                 iframe.style.display = 'inline';
+                player.setMuted(false);
             } else {
+                player.setMuted(true);
                 iframe.style.display = 'none';
             }
         }
