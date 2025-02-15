@@ -9,6 +9,7 @@ func _ready():
 func _input(event):
 	if event.is_action_pressed("customize") && !Global.chat_active:
 		visible = !visible
+		Global.set_tv_enabled(!visible)
 
 
 func _on_body_color_value_changed(value):

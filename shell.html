@@ -44,6 +44,10 @@
             iframe.style.width = `${x * factor}px`;
             iframe.style.height = `${y * factor}px`;
         }
+        let is_tv_on = true;
+        function tv(on) {
+            is_tv_on = on;
+        }
         function cc() {
             let w = window.innerWidth;
             let h = window.innerHeight;
@@ -56,7 +60,7 @@
             let zx = bx + window.x * factor;
             let zy = by + window.y * factor;
             position_iframe(zx, zy);
-            if (zx + fw > 0 && zy + fh > 0 && zx < w && zy < h) {
+            if (zx + fw > 0 && zy + fh > 0 && zx < w && zy < h && is_tv_on) {
                 iframe.style.display = 'inline';
                 player.setMuted(false);
             } else {
@@ -64,6 +68,7 @@
                 iframe.style.display = 'none';
             }
         }
+        window.tv = tv;
         window.cc = cc;
     </script>
 
