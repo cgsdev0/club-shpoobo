@@ -8,13 +8,11 @@ func _ready():
 
 func on_space():
 	Global.in_space = true
-	Global.tv_enabled = false
-	Global.current_tv = 1
 	show()
 	$AnimationPlayer.play("fly")
 	await $AnimationPlayer.animation_finished
 	hide()
-	Global.tv_enabled = true
+	Global.current_tv = 1
 	
 func reset():
 	Global.in_space = false

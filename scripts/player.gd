@@ -188,6 +188,7 @@ func _process(delta):
 		$HeadBack.flip_h = false
 	if !on_ground && was_on_ground:
 		play_animation("jump")
+		$JumpSound.volume_db = 0.0
 		$JumpSound.play()
 	elif $Sprite2D.animation != "jump" || !$Sprite2D.is_playing():
 		if input.move_input != 0.0:
@@ -299,6 +300,7 @@ func move_and_shpoob(delta, bounce = false):
 	if bounce:
 		var collision = move_and_collide(velocity * delta)
 		if collision:
+			$JumpSound.volume_db =  linear_to_db(remap(velocity.length(),0, 80,0.5,1))
 			$JumpSound.play()
 			velocity = velocity.bounce(collision.get_normal())
 	else:
