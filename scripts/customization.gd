@@ -33,3 +33,7 @@ func _on_prev_body_pressed():
 
 func _on_next_body_pressed():
 	Global.change_item.emit("body", 1)
+
+
+func _on_button_toggled(toggled_on):
+	AudioServer.set_bus_mute(0, toggled_on)

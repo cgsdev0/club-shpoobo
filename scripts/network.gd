@@ -43,10 +43,9 @@ func _on_player_connected(id):
 func _on_player_disconnected(id):
 	players.erase(id)
 	player_disconnected.emit(id)
-	if multiplayer.is_server():
-		for child in $Players.get_children():
-			if child.name == str(id):
-				child.queue_free()
+	if not $Players.has_node(str(id)):
+		return
+	$Players.get_node(str(id)).queue_free()
 
 func _on_connected_ok():
 	var peer_id = multiplayer.get_unique_id()
@@ -67,7 +66,7 @@ func on_interact(up, who):
 	var interactee = players[who]
 	if !is_instance_valid(interactee):
 		return
-	query.position = interactee.global_position
+	query.position = interactee.get_child(0).global_position
 	query.collision_mask = 4 # layer 3
 	query.collide_with_areas = true  # Ensure we're checking against areas, not just physics bodies
 	var result = space_state.intersect_point(query)

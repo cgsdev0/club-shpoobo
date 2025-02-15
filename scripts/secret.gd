@@ -16,7 +16,7 @@ func interact(up, interactee):
 	if !up && !open:
 		open = true
 	elif up && open && !is_instance_valid(tween):
-		interactee.teleport.rpc_id(interactee.name.to_int(), $Marker2D.global_position)
+		interactee.get_child(0).teleport.rpc_id(interactee.name.to_int(), $Marker2D.global_position)
 	
 var tween
 func on_open():
@@ -26,8 +26,6 @@ func on_open():
 		tween.kill()
 	tween = get_tree().create_tween()
 	var duration = inverse_lerp(80.0, 25.0, $HoleCover.position.y)
-	print($HoleCover.position.y)
-	print("duration ", duration)
 	tween.tween_property($HoleCover, "position", Vector2($HoleCover.position.x, 80.0), 1.5 * duration)
 	tween.tween_callback(func(): tween = null)
 

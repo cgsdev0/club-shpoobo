@@ -19,15 +19,53 @@ extends CharacterBody2D
 @onready var start_position = position
 
 var owned = false
+func save_game():
+	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
+	var data = {
+		"player_hue": player_hue,
+		"head_hue": head_hue,
+		"head_accessory": head_accessory,
+		"player_skin": player_skin
+	}
+	# JSON provides a static method to serialized JSON string.
+	var json_string = JSON.stringify(data)
+	# Store the save dictionary as a new line in the save file.
+	save_file.store_line(json_string)
+		
+func load_save():
+	if not FileAccess.file_exists("user://savegame.save"):
+		return # Error! We don't have a save to load.
+
+	var save_file = FileAccess.open("user://savegame.save", FileAccess.READ)
+	while save_file.get_position() < save_file.get_length():
+		var json_string = save_file.get_line()
+
+		# Creates the helper class to interact with JSON.
+		var json = JSON.new()
+
+		# Check if there is any error while parsing the JSON string, skip in case of failure.
+		var parse_result = json.parse(json_string)
+		if not parse_result == OK:
+			print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
+			continue
+
+		var data: Dictionary = json.data
+		player_hue = data.get("player_hue", 0.0)
+		head_hue = data.get("head_hue", 0.0)
+		player_skin = data.get("player_skin", 0)
+		head_accessory = data.get("head_accessory", 0)
+		
 func _enter_tree():
-	set_multiplayer_authority(name.to_int())
-	if name.to_int() != multiplayer.get_unique_id():
-		collision_layer = 2
+	set_multiplayer_authority(get_parent().name.to_int())
+	if get_parent().name.to_int() != multiplayer.get_unique_id():
 		z_index = 4
+		$Label.z_index = 6
 		$CameraTarget.queue_free()
 	else:
+		load_save()
 		$AudioListener2D.current = true
 		owned = true
+		$Label.z_index = 3
 		z_index = 5
 		var cam = get_viewport().get_camera_2d()
 		cam.reparent($CameraTarget)
@@ -118,12 +156,12 @@ func play_animation(anim):
 func _physics_process(delta):
 	hat_material.set_shader_parameter("hue", head_hue)
 	body_material.set_shader_parameter("hue", player_hue)
-	update_texture($Sprite2D, shpoobo_textures[player_skin])
-	var acc = accessories[head_accessory]
+	update_texture($Sprite2D, shpoobo_textures[fposmod(player_skin, shpoobo_textures.size())])
+	var acc = accessories[fposmod(head_accessory, accessories.size())]
 	update_texture($HeadFront, acc)
 	update_texture($HeadBack, acc, 32)
-	if get_multiplayer_authority() == multiplayer.get_unique_id():
-		_move(delta)
+	#if get_multiplayer_authority() == multiplayer.get_unique_id():
+	_move(delta)
 
 var was_on_ground = true
 var locked = false
@@ -163,22 +201,105 @@ func respawn():
 	last_y = global_position.y
 	
 @rpc("any_peer")
-func teleport(pos):
+func teleport(pos, space = false):
 	if multiplayer.get_remote_sender_id() == 1:
 		last_y = pos.y
 		global_position = pos
+		if space:
+			Global.go_to_space.emit()
 		
 func _move(delta):
-	velocity.y += gravity * delta
-	var dir = input.move_input
-	if dir != 0:
-		velocity.x = lerp(velocity.x, dir * speed, acceleration)
+	var in_space = false
+	var space_state = get_viewport().get_world_2d().direct_space_state
+	var query = PhysicsPointQueryParameters2D.new()
+	query.position = global_position
+	query.collision_mask = 16 # layer 3
+	query.collide_with_areas = true  # Ensure we're checking against areas, not just physics bodies
+	var result = space_state.intersect_point(query)
+	if result.size() > 0:
+		in_space = true
+	if in_space:
+		var dir = Vector2(input.move_input, input.space_input)
+		velocity += dir * delta * 20.0
+		velocity.limit_length(80.0)
+		if input.jump_input:
+			velocity = velocity.limit_length(velocity.length() * (1 - delta))
+		move_and_shpoob(delta, true)
 	else:
-		velocity.x = lerp(velocity.x, 0.0, friction)
-		
-	move_and_slide()
-	if input.jump_input and is_on_floor():
-		velocity.y = jump_speed
-	on_ground = is_on_floor()
-	if on_ground:
-		last_y = global_position.y
+		velocity.y += gravity * delta
+		var dir = input.move_input
+		if dir != 0:
+			velocity.x = lerp(velocity.x, dir * speed, acceleration)
+		else:
+			velocity.x = lerp(velocity.x, 0.0, friction)
+			
+		move_and_shpoob(delta)
+		if input.jump_input and is_on_floor():
+			velocity.y = jump_speed
+		on_ground = is_on_floor()
+		if on_ground:
+			last_y = global_position.y
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# teehee
+func move_and_shpoob(delta, bounce = false):
+	if bounce:
+		var collision = move_and_collide(velocity * delta)
+		if collision:
+			$JumpSound.play()
+			velocity = velocity.bounce(collision.get_normal())
+	else:
+		move_and_slide()

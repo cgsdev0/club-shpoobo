@@ -30,6 +30,9 @@ properties/5/replication_mode = 2
 properties/6/path = NodePath(".:last_y")
 properties/6/spawn = true
 properties/6/replication_mode = 1
+properties/7/path = NodePath(".:velocity")
+properties/7/spawn = true
+properties/7/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_br2vs"]
 properties/0/path = NodePath("InputSync:move_input")
@@ -38,6 +41,9 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath("InputSync:jump_input")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+properties/2/path = NodePath("InputSync:space_input")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dbp2a"]
 resource_local_to_scene = true
@@ -128,42 +134,45 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.211765, 0.317647, 0.227451, 1)
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="Node2D" type="Node2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 texture_filter = 1
+collision_layer = 130
 script = ExtResource("1_qlk8t")
 
-[node name="CharacterSync" type="MultiplayerSynchronizer" parent="."]
+[node name="CharacterSync" type="MultiplayerSynchronizer" parent="CharacterBody2D"]
 replication_config = SubResource("SceneReplicationConfig_rkm84")
 
-[node name="InputSync" type="MultiplayerSynchronizer" parent="."]
+[node name="InputSync" type="MultiplayerSynchronizer" parent="CharacterBody2D"]
 replication_config = SubResource("SceneReplicationConfig_br2vs")
 script = ExtResource("2_a5vi4")
 
-[node name="HeadBack" type="AnimatedSprite2D" parent="."]
+[node name="HeadBack" type="AnimatedSprite2D" parent="CharacterBody2D"]
 material = SubResource("ShaderMaterial_dbp2a")
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_2h8n4")
 animation = &"jump"
 offset = Vector2(0, -3)
 
-[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+[node name="Sprite2D" type="AnimatedSprite2D" parent="CharacterBody2D"]
 material = SubResource("ShaderMaterial_45odd")
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_2h8n4")
 animation = &"jump"
 offset = Vector2(0, -3)
 
-[node name="HeadFront" type="AnimatedSprite2D" parent="."]
+[node name="HeadFront" type="AnimatedSprite2D" parent="CharacterBody2D"]
 material = SubResource("ShaderMaterial_dbp2a")
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_2h8n4")
 animation = &"jump"
 offset = Vector2(0, -3)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 shape = SubResource("CapsuleShape2D_voar6")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="CharacterBody2D"]
 visible = false
 anchors_preset = 5
 anchor_left = 0.5
@@ -187,15 +196,16 @@ vertical_alignment = 1
 autowrap_mode = 3
 clip_text = true
 
-[node name="ChatTimer" type="Timer" parent="."]
+[node name="ChatTimer" type="Timer" parent="CharacterBody2D"]
 wait_time = 5.0
 one_shot = true
 
-[node name="CameraTarget" type="Node2D" parent="."]
+[node name="CameraTarget" type="Node2D" parent="CharacterBody2D"]
 script = ExtResource("5_ojvgr")
 
-[node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="CharacterBody2D"]
 stream = ExtResource("7_01ckq")
 max_distance = 200.0
+area_mask = 16
 
-[node name="AudioListener2D" type="AudioListener2D" parent="."]
+[node name="AudioListener2D" type="AudioListener2D" parent="CharacterBody2D"]

@@ -2,6 +2,7 @@ extends MultiplayerSynchronizer
 
 
 @export var move_input : float
+@export var space_input : float
 @export var jump_input : bool
 
 # Called when the node enters the scene tree for the first time.
@@ -46,8 +47,10 @@ func change_color(item, hue):
 	match item:
 		"hat":
 			get_parent().head_hue = hue
+			get_parent().save_game()
 		"body":
 			get_parent().player_hue = hue
+			get_parent().save_game()
 	
 func change_item(item, incr):
 	match item:
@@ -57,12 +60,17 @@ func change_item(item, incr):
 				get_parent().head_accessory = get_parent().accessories.size() - 1
 			elif get_parent().head_accessory >= get_parent().accessories.size():
 				get_parent().head_accessory = 0
+			get_parent().save_game()
+			if Global.in_space:
+				Global.die_in_space.emit()
+				get_parent().respawn()
 		"body":
 			get_parent().player_skin += incr
 			if get_parent().player_skin < 0:
 				get_parent().player_skin = get_parent().shpoobo_textures.size() - 1
 			elif get_parent().player_skin >= get_parent().shpoobo_textures.size():
 				get_parent().player_skin = 0
+			get_parent().save_game()
 	
 var disabled = false
 
@@ -73,6 +81,7 @@ func _physics_process(delta):
 		disabled = true
 	if disabled:
 		return
+	space_input = Input.get_axis("secret_up", "secret_down")
 	move_input = Input.get_axis("move_left", "move_right")
 	jump_input = Input.is_action_pressed("jump")
 	if Input.is_action_just_pressed("chat"):
