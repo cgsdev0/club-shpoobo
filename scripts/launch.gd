@@ -11,7 +11,7 @@ func interact(up, interactee):
 	if !let_the_bodies_hit_the_floor.all(func(who): 
 		if !is_instance_valid(who):
 			return true
-		return who.head_accessory == 12
+		return who.head_accessory == 12 || who.head_accessory == 8
 		):
 		return
 	for who in let_the_bodies_hit_the_floor:
